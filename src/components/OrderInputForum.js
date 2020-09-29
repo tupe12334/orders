@@ -3,16 +3,12 @@ import { FormControl, TextField, Button, Typography, CircularProgress } from '@m
 import { db } from '../services/firebase';
 import { Autocomplete } from '@material-ui/lab';
 import cityList from '../services/cityList';
-import StreetsList from '../services/StreetsList';
 import { Formik, Field, Form } from "formik";
-import { DragHandle } from '@material-ui/icons';
 
-
-var t = StreetsList
 
 function sendTextToFireBase(data) {
 
-    if (data != undefined) {
+    if (data !== undefined) {
         console.log(data);
         db.ref('orders').push(data);
     }
@@ -21,34 +17,8 @@ function sendTextToFireBase(data) {
 }
 
 export default function OrderInputForum() {
-    /*
-    const onChange = event => {
-        var tempad = address
-        var tar = event.target
-        var theId = tar.id.substring(0, tar.id.indexOf('TextField'))
-        switch (theId) {
-            case "name":
-                tempad.name = tar.value
-                break;
-            case "city":
-                tempad.city = tar.value
-                break;
-            case "street":
-                tempad.street = tar.value
-                break;
-            case "house":
-                tempad.house = tar.value
-                break;
-            default:
-            // code block
-        }
-        SetAd(tempad);
-        //console.log(address);*/
-
-    // const onChange = event => { }
     const cityListO = cityList.map((option) => {
         const firstLetter = option[0].toUpperCase();
-        //console.log(option)
         return {
             firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
             title: option
@@ -65,6 +35,7 @@ export default function OrderInputForum() {
                     house: ''
       };
     //console.log(cityListO);
+    const dibug = false
     return (
         <div>
             <Typography color="primary" variant="h3">
@@ -77,9 +48,13 @@ export default function OrderInputForum() {
                     data.DDdate = String(data.orderSetDate.getDate()).padStart(2, 0)
                     data.MMdate = String(data.orderSetDate.getMonth() + 1).padStart(2, 0)
                     data.YYdate = data.orderSetDate.getFullYear()
+                    data.MMtime = data.orderSetDate.getMinutes()
+                    data.HHtime = data.orderSetDate.getHours()
+                    data.SStime = data.orderSetDate.getSeconds()
                     sendTextToFireBase(data)
                     console.log(data);
                     resetForm()
+                    
                     setSubmitting(false)
                 }}>
                 {({ values, isSubmitting, handleChange, setFieldValue }) => (
@@ -107,7 +82,8 @@ export default function OrderInputForum() {
                             <Field label="ספר בית" name="house" type="input" variant="filled" as={TextField} />
                             <Button variant="contained" color="primary" disabled={isSubmitting} type="submit">{isSubmitting ? <CircularProgress size="1" /> : "שלח"}</Button>
                         </FormControl>
-                        <pre>{JSON.stringify(values, null, 2)}</pre>
+                        {dibug ? <pre>{JSON.stringify(values, null, 2)}</pre>:null}
+                        
                     </Form>
 
                 )}

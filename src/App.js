@@ -30,7 +30,6 @@ function App() {
       <StylesProvider jss={jss}>
         <div className="App" dir="rtl">
           <OrderInputForum />
-
         </div>
       </StylesProvider>
     </ThemeProvider>
