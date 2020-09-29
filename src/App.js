@@ -8,6 +8,7 @@ import { StylesProvider, jssPreset } from '@material-ui/core/styles';
 import { create } from 'jss';
 import { ThemeProvider } from '@material-ui/core/styles';
 import MyTheme from './assets/MyTheme'
+import GeneralForm from './components/GeneralForm';
 
 
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
@@ -23,12 +24,13 @@ function App() {
       Setspeed(snap.val());
     })
   }, []);
-
+  //<GeneralForm />
   return (
     <ThemeProvider theme={MyTheme}>
       <StylesProvider jss={jss}>
         <div className="App" dir="rtl">
           <OrderInputForum />
+
         </div>
       </StylesProvider>
     </ThemeProvider>
