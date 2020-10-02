@@ -1,40 +1,64 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormControl, TextField, Button, Typography, CircularProgress } from '@material-ui/core';
 import { db } from '../services/firebase';
 import { Autocomplete } from '@material-ui/lab';
 import cityList from '../services/cityList';
 import { Formik, Field, Form } from "formik";
+import getStreets, { getStreetsFromAutoCom } from "../services/StreetsList";
+
+
+
+
 
 
 function sendTextToFireBase(data) {
-
     if (data !== undefined) {
         console.log(data);
         db.ref('orders').push(data);
     }
-
-
 }
 
 export default function OrderInputForum() {
-    const cityListO = cityList.map((option) => {
+    var cityListO = []
+    //var streetListO = []
+    const [streetList, setStreetList] = useState([])
+    const [streetListO, setStreetListO] = useState([])
+    const initialValues = {
+        status: 'inWork',
+        orderSetDate: new Date(),
+        reciverName: "",
+        city: '',
+        street: '',
+        house: ''
+    };
+    cityListO = cityList.map((option) => {
         const firstLetter = option[0].toUpperCase();
         return {
             firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
             title: option
         };
-    }
+    })
     
-    );
-    const initialValues = {
-        status: 'inWork',
-                    orderSetDate: new Date(),
-                    reciverName: "",
-                    city: '',
-                    street: '',
-                    house: ''
-      };
-    //console.log(cityListO);
+    useEffect(() => {
+        //console.log("streetList change");
+        console.log(typeof (streetList));
+        console.log(streetList.length);
+        console.log(streetList);
+        if (streetList.length > 0) {
+            //console.log("streetlist");
+            //console.log(streetList);
+            setStreetListO(streetList.map((option) => {
+                const firstLetter = option[0].toUpperCase();
+                return {
+                    firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+                    title: option
+                };
+            }));
+            console.log("StreetListO");
+            console.log(streetListO);
+        }
+    }, [streetList]);
+    console.log(streetListO);
     const dibug = false
     return (
         <div>
@@ -54,7 +78,7 @@ export default function OrderInputForum() {
                     sendTextToFireBase(data)
                     console.log(data);
                     resetForm()
-                    
+
                     setSubmitting(false)
                 }}>
                 {({ values, isSubmitting, handleChange, setFieldValue }) => (
@@ -69,30 +93,50 @@ export default function OrderInputForum() {
                                 groupBy={(option) => option.firstLetter}
                                 //style={{ width: 300 }}
                                 onChange={(e, value) => {
-                                    console.log(value);
+                                    //console.log("enter change city");
+                                    //console.log(getStreets(value.title));
+                                    if (value) {
+                                        console.log(typeof (getStreets(value.title)));
+                                        setStreetList(getStreets(value.title))
+
+                                        
+                                        //console.log(getStreetsFromAutoCom(value.title));
+                                        //streetListO = getStreetsFromAutoCom(value.title)
+
+                                    }
+                                    //console.log(streetList);
                                     setFieldValue(
-                                      "city",
-                                      value !== null ? value.title : initialValues.city
+                                        "city",
+                                        value !== null ? value.title : initialValues.city
                                     );
-                                  }}
+                                }}
                                 noOptionsText="טוען..."
                                 renderInput={(params) => <TextField {...params} label="עיר" name="city" type="input" variant="filled" id="city" />}
                                 loadingText="טוען..." />
-                            <Field label="רחוב" name="street" type="input" variant="filled" as={TextField} />
-                            <Field label="ספר בית" name="house" type="input" variant="filled" as={TextField} />
+                            <Autocomplete
+                                id="street"
+                                name="street"
+                                options={streetListO ? streetListO : [""]}
+                                getOptionLabel={(option) => option.title}
+                                groupBy={(option) => option.firstLetter}
+                                //style={{ width: 300 }}
+                                onChange={(e, value) => {
+                                    console.log(value);
+                                    setFieldValue(
+                                        "street",
+                                        value !== null ? value.title : initialValues.street
+                                    );
+                                }}
+                                noOptionsText="טוען..."
+                                renderInput={(params) => <TextField {...params} label="רחוב" name="street" type="input" variant="filled" id="street" />}
+                                loadingText="טוען..." />
+                            <Field label="מספר בית" name="house" type="input" variant="filled" as={TextField} />
                             <Button variant="contained" color="primary" disabled={isSubmitting} type="submit">{isSubmitting ? <CircularProgress size="1" /> : "שלח"}</Button>
                         </FormControl>
-                        {dibug ? <pre>{JSON.stringify(values, null, 2)}</pre>:null}
-                        
+                        {dibug ? <pre>{JSON.stringify(values, null, 2)}</pre> : null}
                     </Form>
-
                 )}
-
-
-
-
             </Formik>
-
         </div>
     )
 }
