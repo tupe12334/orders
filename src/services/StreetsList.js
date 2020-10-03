@@ -1,6 +1,6 @@
 import $ from "jquery";
 
-export default function getStreets(city, params) {
+export default function getStreets(city, setArrayInState, params) {
     if (city !== "") {
         const action = "datastore_search"
         const test = "https://data.gov.il/api/3/action/datastore_search"
@@ -21,6 +21,7 @@ export default function getStreets(city, params) {
             dataType: 'json',
             success: function (data) {
                 var streets = $(data.result)[0].records
+                //console.log("from api");
                 //console.log($(data.result)[0].records);
                 var counter = 1
                 streets.forEach(street => {
@@ -34,23 +35,19 @@ export default function getStreets(city, params) {
                         counter++
                     }
                 });
-                /*
-                console.log(counter);
-                StreetsList.length = counter
-                console.log(StreetsList);
-                */
+                if (StreetsList) {
+
+                    console.log("street");
+                    console.log(StreetsList);
+                    console.log(typeof (StreetsList));
+                    console.log(StreetsList.length);
+
+                    setArrayInState(StreetsList)
+                }
             }
+
         })
-        if (StreetsList) {
-            /*
-                        console.log("street");
-                        console.log(StreetsList);
-                        console.log(typeof (StreetsList));
-            */
-            return (
-                StreetsList
-            )
-        }
+
     }
 
 

@@ -38,25 +38,36 @@ export default function OrderInputForum() {
             title: option
         };
     })
-    
+    //console.log(streetList.length);
     useEffect(() => {
-        //console.log("streetList change");
-        console.log(typeof (streetList));
-        console.log(streetList.length);
-        console.log(streetList);
-        if (streetList.length > 0) {
-            //console.log("streetlist");
-            //console.log(streetList);
-            setStreetListO(streetList.map((option) => {
-                const firstLetter = option[0].toUpperCase();
-                return {
-                    firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
-                    title: option
-                };
-            }));
-            console.log("StreetListO");
-            console.log(streetListO);
+        if (streetList !== undefined && streetList !== null) {
+            console.log("streetList change");
+            console.log("typeof:");
+            console.log(typeof (streetList));
+            console.log("streetList: ");
+            console.log(streetList)
+            console.log("stringify: ");
+            console.log(JSON.stringify(streetList));
+            console.log("length: ");
+            console.log(streetList.length);
+            console.log("slice");
+            //console.log(streetList.slice());
+
+            if (streetList.length > 0) {
+                //console.log("streetlist");
+                //console.log(streetList);
+                setStreetListO(streetList.map((option) => {
+                    const firstLetter = option[0].toUpperCase();
+                    return {
+                        firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+                        title: option
+                    };
+                }));
+                console.log("StreetListO");
+                console.log(streetListO);
+            }
         }
+
     }, [streetList]);
     console.log(streetListO);
     const dibug = false
@@ -96,10 +107,8 @@ export default function OrderInputForum() {
                                     //console.log("enter change city");
                                     //console.log(getStreets(value.title));
                                     if (value) {
-                                        console.log(typeof (getStreets(value.title)));
-                                        setStreetList(getStreets(value.title))
-
-                                        
+                                        console.log("setStreetList");
+                                        getStreets(value.title, setStreetList)
                                         //console.log(getStreetsFromAutoCom(value.title));
                                         //streetListO = getStreetsFromAutoCom(value.title)
 
