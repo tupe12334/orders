@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { FormControl, TextField, Button, Typography, CircularProgress } from '@material-ui/core';
+import { FormControl, TextField, Button, Typography, CircularProgress, Box } from '@material-ui/core';
 import { db } from '../services/firebase';
 import { Autocomplete } from '@material-ui/lab';
-import cityList from '../services/cityList';
+import getCityList from '../services/cityList';
 import { Formik, Field, Form } from "formik";
-import getStreets, { getStreetsFromAutoCom } from "../services/StreetsList";
+import getStreets from "../services/StreetsList";
+import Icon from '@material-ui/core/Icon';
 
 
 
@@ -13,7 +14,7 @@ import getStreets, { getStreetsFromAutoCom } from "../services/StreetsList";
 
 function sendTextToFireBase(data) {
     if (data !== undefined) {
-        console.log(data);
+        // console.log(data);
         db.ref('orders').push(data);
     }
 }
@@ -23,6 +24,8 @@ export default function OrderInputForum() {
     //var streetListO = []
     const [streetList, setStreetList] = useState([])
     const [streetListO, setStreetListO] = useState([])
+    const [cityList, setCityList] = useState([])
+    const [citySelected, setCitySelected] = useState(false)
     const initialValues = {
         status: 'inWork',
         orderSetDate: new Date(),
@@ -31,6 +34,9 @@ export default function OrderInputForum() {
         street: '',
         house: ''
     };
+    useEffect(() => {
+        getCityList(setCityList)
+    }, []);
     cityListO = cityList.map((option) => {
         const firstLetter = option[0].toUpperCase();
         return {
@@ -41,21 +47,7 @@ export default function OrderInputForum() {
     //console.log(streetList.length);
     useEffect(() => {
         if (streetList !== undefined && streetList !== null) {
-            console.log("streetList change");
-            console.log("typeof:");
-            console.log(typeof (streetList));
-            console.log("streetList: ");
-            console.log(streetList)
-            console.log("stringify: ");
-            console.log(JSON.stringify(streetList));
-            console.log("length: ");
-            console.log(streetList.length);
-            console.log("slice");
-            //console.log(streetList.slice());
-
             if (streetList.length > 0) {
-                //console.log("streetlist");
-                //console.log(streetList);
                 setStreetListO(streetList.map((option) => {
                     const firstLetter = option[0].toUpperCase();
                     return {
@@ -63,13 +55,11 @@ export default function OrderInputForum() {
                         title: option
                     };
                 }));
-                console.log("StreetListO");
-                console.log(streetListO);
             }
         }
 
     }, [streetList]);
-    console.log(streetListO);
+    //console.log(streetListO);
     const dibug = false
     return (
         <div>
@@ -107,11 +97,15 @@ export default function OrderInputForum() {
                                     //console.log("enter change city");
                                     //console.log(getStreets(value.title));
                                     if (value) {
-                                        console.log("setStreetList");
+                                        //console.log("setStreetList");
                                         getStreets(value.title, setStreetList)
                                         //console.log(getStreetsFromAutoCom(value.title));
                                         //streetListO = getStreetsFromAutoCom(value.title)
-
+                                        setCitySelected(true)
+                                    }
+                                    else {
+                                        setCitySelected(false)
+                                        setStreetListO([])
                                     }
                                     //console.log(streetList);
                                     setFieldValue(
@@ -119,7 +113,7 @@ export default function OrderInputForum() {
                                         value !== null ? value.title : initialValues.city
                                     );
                                 }}
-                                noOptionsText="טוען..."
+                                noOptionsText="לא נמצא חיפוש מתאים..."
                                 renderInput={(params) => <TextField {...params} label="עיר" name="city" type="input" variant="filled" id="city" />}
                                 loadingText="טוען..." />
                             <Autocomplete
@@ -130,17 +124,17 @@ export default function OrderInputForum() {
                                 groupBy={(option) => option.firstLetter}
                                 //style={{ width: 300 }}
                                 onChange={(e, value) => {
-                                    console.log(value);
+                                    //console.log(value);
                                     setFieldValue(
                                         "street",
                                         value !== null ? value.title : initialValues.street
                                     );
                                 }}
-                                noOptionsText="טוען..."
+                                noOptionsText={citySelected ? "לא נמצא חיפוש מתאים..." : "לא נבחר עיר"}
                                 renderInput={(params) => <TextField {...params} label="רחוב" name="street" type="input" variant="filled" id="street" />}
                                 loadingText="טוען..." />
                             <Field label="מספר בית" name="house" type="input" variant="filled" as={TextField} />
-                            <Button variant="contained" color="primary" disabled={isSubmitting} type="submit">{isSubmitting ? <CircularProgress size="1" /> : "שלח"}</Button>
+                            <Button variant="contained" color="primary" disabled={isSubmitting} type="submit" endIcon={<Icon style={{ transform: "scaleX(-1)" }}>send</Icon>}>{isSubmitting ? <CircularProgress size="1" /> : "שלח"}</Button>
                         </FormControl>
                         {dibug ? <pre>{JSON.stringify(values, null, 2)}</pre> : null}
                     </Form>
