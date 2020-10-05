@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { FormControl, TextField, Button, Typography, CircularProgress, Box } from '@material-ui/core';
-import { db } from '../services/firebase';
-import { Autocomplete } from '@material-ui/lab';
-import getCityList from '../services/cityList';
-import { Formik, Field, Form } from "formik";
-import getStreets from "../services/StreetsList";
+import { Button, CircularProgress, FormControl, TextField, Typography } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
-
+import { Autocomplete } from '@material-ui/lab';
+import { Field, Form, Formik } from "formik";
+import { TextField as TF } from 'formik-material-ui';
+import React, { useEffect, useState } from 'react';
+import { number, object } from 'yup';
+import getCityList from '../services/cityList';
+import { db } from '../services/firebase';
+import getStreets from "../services/StreetsList";
 
 
 
@@ -44,7 +45,6 @@ export default function OrderInputForum() {
             title: option
         };
     })
-    //console.log(streetList.length);
     useEffect(() => {
         if (streetList !== undefined && streetList !== null) {
             if (streetList.length > 0) {
@@ -59,7 +59,6 @@ export default function OrderInputForum() {
         }
 
     }, [streetList]);
-    //console.log(streetListO);
     const dibug = false
     return (
         <div>
@@ -81,11 +80,16 @@ export default function OrderInputForum() {
                     resetForm()
 
                     setSubmitting(false)
-                }}>
+                }}
+                validateSchema={object({
+                    house: number().min(10),
+                    //reciverName: text()
+                })
+                }>
                 {({ values, isSubmitting, handleChange, setFieldValue }) => (
                     <Form>
                         <FormControl margin="normal" required>
-                            <Field label="שם המקבל" name="reciverName" type="input" variant="filled" as={TextField} />
+                            <Field label="שם המקבל" name="reciverName" type="input" variant="filled" component={TF} />
                             <Autocomplete
                                 id="city"
                                 name="city"
@@ -133,13 +137,13 @@ export default function OrderInputForum() {
                                 noOptionsText={citySelected ? "לא נמצא חיפוש מתאים..." : "לא נבחר עיר"}
                                 renderInput={(params) => <TextField {...params} label="רחוב" name="street" type="input" variant="filled" id="street" />}
                                 loadingText="טוען..." />
-                            <Field label="מספר בית" name="house" type="input" variant="filled" as={TextField} />
+                            <Field label="מספר בית" name="house" type="input" variant="filled" component={TF} />
                             <Button variant="contained" color="primary" disabled={isSubmitting} type="submit" endIcon={<Icon style={{ transform: "scaleX(-1)" }}>send</Icon>}>{isSubmitting ? <CircularProgress size="1" /> : "שלח"}</Button>
                         </FormControl>
                         {dibug ? <pre>{JSON.stringify(values, null, 2)}</pre> : null}
                     </Form>
                 )}
             </Formik>
-        </div>
+        </div >
     )
 }
