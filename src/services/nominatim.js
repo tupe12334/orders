@@ -11,7 +11,7 @@ export default function getGeoCoding(params, setPostionInState) {
         */
         var latLng = [0, 0]
         const request = `https://nominatim.openstreetmap.org/search?q=${house}+${street},+${city}&format=xml&polygon_geojson=1&addressdetails=1`
-        console.log(request);
+        //console.log(request);
         $.ajax(
             request, {
             dataType: "xml",

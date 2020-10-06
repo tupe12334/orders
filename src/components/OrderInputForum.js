@@ -5,21 +5,12 @@ import { Field, Form, Formik } from "formik";
 import { TextField as TF } from 'formik-material-ui';
 import React, { useEffect, useState } from 'react';
 import { number, object } from 'yup';
-import getCityList from '../services/cityList';
-import { db } from '../services/firebase';
-import getStreets from "../services/StreetsList";
-import Nominatim from 'nominatim';
+import getCityList from '../services/GovAPI/cityList';
+import { sendObjectToFireBase } from '../services/firebase';
+import getStreets from "../services/GovAPI/StreetsList";
 
 
 
-
-
-function sendTextToFireBase(data) {
-    if (data !== undefined) {
-        // console.log(data);
-        db.ref('orders').push(data);
-    }
-}
 
 export default function OrderInputForum() {
     var cityListO = []
@@ -35,8 +26,6 @@ export default function OrderInputForum() {
         city: '',
         street: '',
         house: '',
-        lat: '',
-        lng: ''
     };
     useEffect(() => {
         getCityList(setCityList)
@@ -78,15 +67,7 @@ export default function OrderInputForum() {
                     data.MMtime = data.orderSetDate.getMinutes()
                     data.HHtime = data.orderSetDate.getHours()
                     data.SStime = data.orderSetDate.getSeconds()
-                    var fulladdress = data.street + " " + data.house + " " + data.city
-                    Nominatim.search({ q: fulladdress }, function (err, opts, results) {
-                        console.log("err");
-                        console.log(err);
-                        console.log("results");
-                        console.log(results);
-                    })
-                    sendTextToFireBase(data)
-                    console.log(data);
+                    sendObjectToFireBase(data)
                     resetForm()
                     setSubmitting(false)
                 }}

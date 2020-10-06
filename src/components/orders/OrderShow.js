@@ -18,13 +18,13 @@ export default function OrderShow() {
             setordersViewToShow(temp2.map((order) => {
                 var thisOrder = order[1]
                 //console.log(order[1]);
-                var dateformat = order[1].DDdate + "/" + order[1].MMdate + "/" + thisOrder.YYdate
+                var dateformat = thisOrder.DDdate + "/" + thisOrder.MMdate + "/" + thisOrder.YYdate
                 var address = { street: thisOrder.street, house: thisOrder.house, city: thisOrder.city }
                 //console.log(address);
                 //console.log(dateformat);
                 return (
-                    <Grid key={counter} item xs={3}>
-                        <OneOrder key={counter++} rcivername={order[1].reciverName} date={dateformat} address={address} />
+                    <Grid key={counter} item>
+                        <OneOrder key={counter++} rcivername={order[1].reciverName} date={dateformat} address={address} order={thisOrder} />
                     </Grid>
                 )
             })
