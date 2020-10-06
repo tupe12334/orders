@@ -8,6 +8,7 @@ import { number, object } from 'yup';
 import getCityList from '../services/cityList';
 import { db } from '../services/firebase';
 import getStreets from "../services/StreetsList";
+import Nominatim from 'nominatim';
 
 
 
@@ -33,7 +34,9 @@ export default function OrderInputForum() {
         reciverName: "",
         city: '',
         street: '',
-        house: ''
+        house: '',
+        lat: '',
+        lng: ''
     };
     useEffect(() => {
         getCityList(setCityList)
@@ -75,10 +78,16 @@ export default function OrderInputForum() {
                     data.MMtime = data.orderSetDate.getMinutes()
                     data.HHtime = data.orderSetDate.getHours()
                     data.SStime = data.orderSetDate.getSeconds()
+                    var fulladdress = data.street + " " + data.house + " " + data.city
+                    Nominatim.search({ q: fulladdress }, function (err, opts, results) {
+                        console.log("err");
+                        console.log(err);
+                        console.log("results");
+                        console.log(results);
+                    })
                     sendTextToFireBase(data)
                     console.log(data);
                     resetForm()
-
                     setSubmitting(false)
                 }}
                 validateSchema={object({

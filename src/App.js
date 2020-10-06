@@ -18,7 +18,6 @@ function App() {
           <NavBar />
           <Body />
         </div>
-
       </StylesProvider>
     </ThemeProvider>
   );
