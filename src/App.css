@@ -1,14 +1,18 @@
 .App {
   text-align: center;
 }
-html, body {
+
+html,
+body {
   max-width: 100%;
   overflow-x: hidden;
+  overflow-y: scroll
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -36,6 +40,7 @@ html, body {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

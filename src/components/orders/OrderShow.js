@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../../services/firebase';
-import { Grid} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import OneOrder from './OneOrder';
 
 var ordersRef = db.ref('orders')
@@ -10,7 +10,7 @@ export default function OrderShow() {
     const [ordersViewToShow, setordersViewToShow] = useState(null)
     useEffect(() => {
         getOrdersFromDB()
-    },[]);
+    }, []);
     function getOrdersFromDB() {
         ordersRef.on('value', snap => {
             var temp = snap.val()
@@ -34,7 +34,7 @@ export default function OrderShow() {
 
     var counter = 0
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} >
             <Grid item>
                 <Grid container justify="center" spacing={2}>
                     {ordersViewToShow}

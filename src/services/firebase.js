@@ -14,18 +14,17 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 export const db = firebase.database();
 
-
-
 export function sendObjectToFireBase(object) {
   getGeoCoding(object, (postion) => {
-    console.log("postion");
-    console.log(postion);
+    //console.log("postion");
+    //console.log(postion);
     object.latitude = postion[0]
     object.longitude = postion[1]
+    //console.log("object that send to firebase");
+    //console.log(object);
     if (object !== undefined) {
-      console.log("object that send to firebase");
-      console.log(object);
-      
+      //console.log("object that send to firebase");
+      //console.log(object);
       db.ref('orders').push(object);
     }
   })

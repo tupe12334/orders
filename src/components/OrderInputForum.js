@@ -1,26 +1,37 @@
-import { Button, CircularProgress, FormControl, TextField, Typography } from '@material-ui/core';
+import { Button, CircularProgress, FormControl, Snackbar, TextField, Typography } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
+import { makeStyles } from '@material-ui/core/styles';
 import { Autocomplete } from '@material-ui/lab';
+import MuiAlert from '@material-ui/lab/Alert';
 import { Field, Form, Formik } from "formik";
 import { TextField as TF } from 'formik-material-ui';
 import React, { useEffect, useState } from 'react';
 import { number, object } from 'yup';
-import getCityList from '../services/GovAPI/cityList';
+import OrderStatusEnum from '../assets/OrderStatusEnum';
 import { sendObjectToFireBase } from '../services/firebase';
+import getCityList from '../services/GovAPI/cityList';
 import getStreets from "../services/GovAPI/StreetsList";
 
 
 
+const useStyles = makeStyles((MyTheme) => ({
+  }));
+  
+
+
 
 export default function OrderInputForum() {
+    const classes = useStyles();
+
     var cityListO = []
     //var streetListO = []
     const [streetList, setStreetList] = useState([])
     const [streetListO, setStreetListO] = useState([])
     const [cityList, setCityList] = useState([])
     const [citySelected, setCitySelected] = useState(false)
+    const [submitAlertStatus, setSubmitAlertStatus] = useState(false)
     const initialValues = {
-        status: 'inWork',
+        status: OrderStatusEnum.received,
         orderSetDate: new Date(),
         reciverName: "",
         city: '',
@@ -37,6 +48,9 @@ export default function OrderInputForum() {
             title: option
         };
     })
+    const handleOpenAlert = () => {
+        setSubmitAlertStatus(true);
+      };
     useEffect(() => {
         if (streetList !== undefined && streetList !== null) {
             if (streetList.length > 0) {
@@ -67,8 +81,10 @@ export default function OrderInputForum() {
                     data.MMtime = data.orderSetDate.getMinutes()
                     data.HHtime = data.orderSetDate.getHours()
                     data.SStime = data.orderSetDate.getSeconds()
+                    
                     sendObjectToFireBase(data)
                     resetForm()
+                    handleOpenAlert()
                     setSubmitting(false)
                 }}
                 validateSchema={object({
@@ -134,6 +150,11 @@ export default function OrderInputForum() {
                     </Form>
                 )}
             </Formik>
+            <Snackbar open={submitAlertStatus} autoHideDuration={6000}>
+                <MuiAlert elevation={6} variant="filled" severity="success">
+                    ההזמנה התקבלה בהצלחה!
+               </MuiAlert>
+            </Snackbar>
         </div >
     )
 }

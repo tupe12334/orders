@@ -5,6 +5,10 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom'
 import 'leaflet/dist/leaflet.css';
+import "tabler-react/dist/Tabler.RTL.css";
+
+
+
 
 
 ReactDOM.render(

@@ -3,8 +3,7 @@ import Icon from '@material-ui/core/Icon';
 import React from 'react';
 import Menu from './Menu';
 
-
-export default function NavBar() {
+export default function NavBar(props) {
     const [menuDrawerState, setMenuDrawerState] = React.useState(false);
 
     const toggleDrawer = (open) => (event) => {
@@ -12,7 +11,6 @@ export default function NavBar() {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return;
         }
-
         setMenuDrawerState(open);
     };
     return (
@@ -23,7 +21,7 @@ export default function NavBar() {
                 </IconButton>
                 <Typography variant="h6" >
                     מערך המשלוחים
-          </Typography>
+                   </Typography>
                 <Drawer open={menuDrawerState} onClose={toggleDrawer(false)}>
                     <div
                         role="presentation"
