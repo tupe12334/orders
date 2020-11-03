@@ -1,7 +1,8 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Routes from '../pages/Routes';
-import Error from '../pages/Error';
+import Routes from '../../pages/Routes';
+import Error from '../../pages/Error';
+import Signin from '../Auth/Signin'
 
 export default function Body() {
     return (
@@ -15,9 +16,11 @@ export default function Body() {
                         </Route>
                     )
                 })}
+                <Route path='/signin' component={Signin} />
+
+                {/*must to be in the buttom*/}
                 <Route component={Error} />
             </Switch>
-
         </div>
     )
 }

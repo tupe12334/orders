@@ -29,6 +29,7 @@
     "react-geocode": "^0.2.1",
     "react-leaflet": "^2.7.0",
     "react-leaflet-box-zoom": "^1.0.2",
+    "react-redux": "^7.2.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",

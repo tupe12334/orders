@@ -2,7 +2,7 @@ import { Divider, List, ListItemIcon, ListItemText, MenuItem, MenuList, Typograp
 import Icon from '@material-ui/core/Icon';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import Routes from '../pages/Routes';
+import Routes from '../../../pages/Routes';
 
 
 export default function Menu() {
@@ -15,7 +15,6 @@ export default function Menu() {
                 <Typography variant='inherit' display="block" style={{ textAlign: "center", fontSize: "25px" }}>תפריט ראשי</Typography>
             </div>
             <Divider variant="middle" />
-
             <List>
                 <MenuList>
                     {Routes.map((prop, key) => {
